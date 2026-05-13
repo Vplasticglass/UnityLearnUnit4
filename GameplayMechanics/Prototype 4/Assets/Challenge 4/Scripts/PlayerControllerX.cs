@@ -8,7 +8,7 @@ public class PlayerControllerX : MonoBehaviour
     private float speed = 500;
     private GameObject focalPoint;
 
-    public bool hasPowerup;
+    public bool hasPowerup = false;
     public GameObject powerupIndicator;
     public int powerUpDuration = 5;
 
@@ -40,11 +40,12 @@ public class PlayerControllerX : MonoBehaviour
             Destroy(other.gameObject);
             hasPowerup = true;
             powerupIndicator.SetActive(true);
+            StartCoroutine(PowerupDuration());
         }
     }
 
     // Coroutine to count down powerup duration
-    IEnumerator PowerupCooldown()
+    IEnumerator PowerupDuration()
     {
         yield return new WaitForSeconds(powerUpDuration);
         hasPowerup = false;
@@ -57,8 +58,8 @@ public class PlayerControllerX : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             Rigidbody enemyRigidbody = other.gameObject.GetComponent<Rigidbody>();
-            Vector3 awayFromPlayer =  transform.position - other.gameObject.transform.position; 
-           
+            Vector3 awayFromPlayer = other.gameObject.transform.position - transform.position;
+
             if (hasPowerup) // if have powerup hit enemy with powerup force
             {
                 enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
